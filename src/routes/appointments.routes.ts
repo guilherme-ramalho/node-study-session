@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { startOfHour, parseISO } from 'date-fns';
-import AppointmentsRepository from '../respositories/appointments.repository';
+import { parseISO } from 'date-fns';
+import AppointmentRepository from '../respositories/AppointmentRepository';
+import CreateAppointmentService from '../services/CreateAppointmentService';
 
 const router = Router();
-const appointmentRepository = new AppointmentsRepository();
+const appointmentRepository = new AppointmentRepository();
 
 router.get('/list', (request, response) => {
   const appointments = appointmentRepository.findAll();
@@ -12,22 +13,28 @@ router.get('/list', (request, response) => {
 });
 
 router.post('/create', (request, response) => {
-  const { provider, date } = request.body;
-  const parsedDate = startOfHour(parseISO(date));
+  try {
+    const { provider, date } = request.body;
+    const parsedDate = parseISO(date);
 
-  if (appointmentRepository.isDateAlreadyBooked(parsedDate)) {
-    return response.json({ message: 'This date is no longer available' });
+    const createAppointmentService = new CreateAppointmentService(
+      appointmentRepository
+    );
+
+    const appointments = createAppointmentService.execute({
+      provider,
+      date: parsedDate,
+    });
+
+    return response.json({
+      data: appointments,
+      message: 'Appoint successfully booked',
+    });
+  } catch (err) {
+    return response.status(400).json({
+      error: err.message,
+    });
   }
-
-  const appointments = appointmentRepository.create({
-    provider,
-    date: parsedDate,
-  });
-
-  return response.json({
-    data: appointments,
-    message: 'Appoint successfully booked',
-  });
 });
 
 export default router;

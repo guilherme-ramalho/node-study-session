@@ -12,7 +12,9 @@
   "dependencies": {
     "date-fns": "^2.16.1",
     "express": "^4.17.1",
+    "mysql": "^2.18.1",
     "ts-node-dev": "^1.0.0",
+    "typeorm": "^0.2.30",
     "uuidv4": "^6.2.5"
   },
   "devDependencies": {

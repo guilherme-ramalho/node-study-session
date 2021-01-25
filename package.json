@@ -7,12 +7,14 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/server.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
     "date-fns": "^2.16.1",
     "express": "^4.17.1",
     "mysql": "^2.18.1",
+    "reflect-metadata": "^0.1.13",
     "ts-node-dev": "^1.0.0",
     "typeorm": "^0.2.30",
     "uuidv4": "^6.2.5"

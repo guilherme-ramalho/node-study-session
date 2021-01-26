@@ -1,26 +1,24 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
-  CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
 } from 'typeorm';
-import User from './User';
 
-@Entity('appointment')
-class Appointment {
+@Entity('user')
+class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column('varchar')
-  providerId: string;
+  name: string;
 
-  @Column('timestamp')
-  date: Date;
+  @Column('varchar')
+  email: string;
 
-  @ManyToOne(() => User)
-  provider: User;
+  @Column('varchar')
+  password: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -29,4 +27,4 @@ class Appointment {
   updatedAt: Date;
 }
 
-export default Appointment;
+export default User;

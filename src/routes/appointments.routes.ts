@@ -16,13 +16,13 @@ router.get('/list', async (request, response) => {
 
 router.post('/create', async (request, response) => {
   try {
-    const { provider, date } = request.body;
+    const { providerId, date } = request.body;
     const parsedDate = parseISO(date);
 
     const createAppointmentService = new CreateAppointmentService();
 
     const appointments = await createAppointmentService.execute({
-      provider,
+      providerId,
       date: parsedDate,
     });
 

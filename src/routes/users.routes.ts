@@ -10,22 +10,16 @@ const router = Router();
 const upload = multer(uploadConfig);
 
 router.post('/create', async (request, response) => {
-  try {
-    const { name, email, password } = request.body;
+  const { name, email, password } = request.body;
 
-    const createUserService = new CreateUserService();
+  const createUserService = new CreateUserService();
 
-    const user = await createUserService.execute({ name, email, password });
+  const user = await createUserService.execute({ name, email, password });
 
-    return response.json({
-      user,
-      message: 'Appointment successfully created',
-    });
-  } catch (err) {
-    return response.status(400).json({
-      error: err.message,
-    });
-  }
+  return response.json({
+    user,
+    message: 'Appointment successfully created',
+  });
 });
 
 router.patch(
@@ -33,18 +27,14 @@ router.patch(
   AuthMiddleware,
   upload.single('picture'),
   async (request, response) => {
-    try {
-      const updateUserAvatar = new UpdateUserAvatar();
+    const updateUserAvatar = new UpdateUserAvatar();
 
-      const user = await updateUserAvatar.execute({
-        userId: request.user.id,
-        pictureFilename: request.file.filename,
-      });
+    const user = await updateUserAvatar.execute({
+      userId: request.user.id,
+      pictureFilename: request.file.filename,
+    });
 
-      return response.json({ user });
-    } catch (error) {
-      return response.status(400).json(error.message);
-    }
+    return response.json({ user });
   }
 );
 

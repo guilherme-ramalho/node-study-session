@@ -11,37 +11,27 @@ const router = Router();
 router.use(AuthMiddleware);
 
 router.get('/list', async (request, response) => {
-  try {
-    const appointmentRepository = getCustomRepository(AppointmentRepository);
-    const appointments = await appointmentRepository.find();
+  const appointmentRepository = getCustomRepository(AppointmentRepository);
+  const appointments = await appointmentRepository.find();
 
-    return response.json(appointments);
-  } catch (error) {
-    return response.status(error.statusCode).json({ error: error.message });
-  }
+  return response.json(appointments);
 });
 
 router.post('/create', async (request, response) => {
-  try {
-    const { providerId, date } = request.body;
-    const parsedDate = parseISO(date);
+  const { providerId, date } = request.body;
+  const parsedDate = parseISO(date);
 
-    const createAppointmentService = new CreateAppointmentService();
+  const createAppointmentService = new CreateAppointmentService();
 
-    const appointments = await createAppointmentService.execute({
-      providerId,
-      date: parsedDate,
-    });
+  const appointments = await createAppointmentService.execute({
+    providerId,
+    date: parsedDate,
+  });
 
-    return response.json({
-      data: appointments,
-      message: 'Appoint successfully booked',
-    });
-  } catch (err) {
-    return response.status(400).json({
-      error: err.message,
-    });
-  }
+  return response.json({
+    data: appointments,
+    message: 'Appoint successfully booked',
+  });
 });
 
 export default router;

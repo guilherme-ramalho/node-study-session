@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
 import authConfig from '../config/auth';
 
+import AppError from '../errors/AppError';
+
 interface IToken {
   iat: number;
   exp: number;
@@ -16,7 +18,7 @@ const checkAuthentication = (
   const authHeader = request.headers.authorization;
 
   if (!authHeader) {
-    throw new Error('Authorization token is missing');
+    throw new AppError('Authorization token is missing', 401);
   }
 
   const [, token] = authHeader.split(' ');
@@ -32,7 +34,7 @@ const checkAuthentication = (
 
     return next();
   } catch {
-    throw new Error('Authorization token is invalid');
+    throw new AppError('Authorization token is invalid', 401);
   }
 };
 

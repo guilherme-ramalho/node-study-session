@@ -11,10 +11,14 @@ const router = Router();
 router.use(AuthMiddleware);
 
 router.get('/list', async (request, response) => {
-  const appointmentRepository = getCustomRepository(AppointmentRepository);
-  const appointments = await appointmentRepository.find();
+  try {
+    const appointmentRepository = getCustomRepository(AppointmentRepository);
+    const appointments = await appointmentRepository.find();
 
-  return response.json(appointments);
+    return response.json(appointments);
+  } catch (error) {
+    return response.status(error.statusCode).json({ error: error.message });
+  }
 });
 
 router.post('/create', async (request, response) => {

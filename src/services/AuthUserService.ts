@@ -3,6 +3,7 @@ import { sign } from 'jsonwebtoken';
 import { getRepository } from 'typeorm';
 import User from '../models/User';
 import authConfig from '../config/auth';
+import AppError from '../errors/AppError';
 
 interface IAuth {
   email: string;
@@ -25,13 +26,13 @@ class AuthUserService {
     });
 
     if (!user) {
-      throw new Error('Invalid credentials');
+      throw new AppError('Invalid credentials', 404);
     }
 
     const passwordMatched = await compare(password, user.password);
 
     if (!passwordMatched) {
-      throw new Error('Invalid credentials');
+      throw new AppError('Invalid credentials', 401);
     }
 
     const { secret, expiresIn } = authConfig.jwt;

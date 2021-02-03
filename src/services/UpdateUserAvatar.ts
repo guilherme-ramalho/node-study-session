@@ -4,6 +4,8 @@ import fs from 'fs';
 import User from '../models/User';
 import uploadConfig from '../config/upload';
 
+import AppError from '../errors/AppError';
+
 interface IAvatarUpload {
   userId: string;
   pictureFilename: string;
@@ -19,7 +21,7 @@ class UpdateUserAvatar {
     const user = await userRepository.findOne(userId);
 
     if (!user) {
-      throw new Error('User does not exists');
+      throw new AppError('User does not exists');
     }
 
     if (user.picture) {

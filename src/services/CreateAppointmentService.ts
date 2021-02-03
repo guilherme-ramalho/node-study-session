@@ -1,6 +1,8 @@
 import { startOfHour } from 'date-fns';
 import { getCustomRepository } from 'typeorm';
 
+import AppError from '../errors/AppError';
+
 import AppointmentRepository from '../respositories/AppointmentRepository';
 
 interface Appointment {
@@ -21,7 +23,7 @@ class CreateAppointmentService {
     );
 
     if (isDateAlreadyBooked) {
-      throw new Error('This date is no longer available');
+      throw new AppError('This date is no longer available');
     }
 
     const appointment = appointmentRepository.create({

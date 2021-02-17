@@ -1,10 +1,10 @@
 import { getRepository } from 'typeorm';
 import path from 'path';
 import fs from 'fs';
-import User from '../models/User';
-import uploadConfig from '../config/upload';
+import User from '@modules/user/infra/typeorm/entities/User';
+import uploadConfig from '@config/upload';
 
-import AppError from '../errors/AppError';
+import AppError from '@shared/errors/AppError';
 
 interface IAvatarUpload {
   userId: string;

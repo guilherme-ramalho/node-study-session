@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
 } from 'typeorm';
-import User from './User';
+import User from '@modules/user/infra/typeorm/entities/User';
 
 @Entity('appointment')
 class Appointment {

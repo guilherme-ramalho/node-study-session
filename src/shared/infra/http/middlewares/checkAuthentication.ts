@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
-import authConfig from '../config/auth';
+import authConfig from '@config/auth';
 
-import AppError from '../errors/AppError';
+import AppError from '@shared/errors/AppError';
 
 interface IToken {
   iat: number;
@@ -33,7 +33,7 @@ const checkAuthentication = (
     };
 
     return next();
-  } catch {
+  } catch (error) {
     throw new AppError('Authorization token is invalid', 401);
   }
 };

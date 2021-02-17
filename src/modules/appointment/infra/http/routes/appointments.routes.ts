@@ -2,9 +2,9 @@ import { Router } from 'express';
 import { parseISO } from 'date-fns';
 import { getCustomRepository } from 'typeorm';
 
-import AppointmentRepository from '../respositories/AppointmentRepository';
-import CreateAppointmentService from '../services/CreateAppointmentService';
-import AuthMiddleware from '../middlewares/checkAuthentication';
+import AppointmentRepository from '@modules/appointment/repositories/AppointmentRepository';
+import CreateAppointmentService from '@modules/appointment/services/CreateAppointmentService';
+import AuthMiddleware from '@shared/infra/http/middlewares/checkAuthentication';
 
 const router = Router();
 

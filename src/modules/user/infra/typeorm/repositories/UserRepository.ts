@@ -10,6 +10,12 @@ class UserRepository implements IUserRepository {
     this.userRepository = getRepository(User);
   }
 
+  findAll(): Promise<User[] | undefined> {
+    const users = this.userRepository.find();
+
+    return users;
+  }
+
   public async findById(id: string): Promise<User | undefined> {
     const user = await this.userRepository.findOne({
       where: {

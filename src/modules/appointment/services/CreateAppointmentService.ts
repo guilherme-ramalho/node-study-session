@@ -1,24 +1,29 @@
 import { startOfHour } from 'date-fns';
-import { getCustomRepository } from 'typeorm';
+import { inject, injectable } from 'tsyringe';
+
+import Appointment from '@modules/appointment/infra/typeorm/entities/Appointment';
 
 import AppError from '@shared/errors/AppError';
+import IAppointmentRepository from '../repositories/IAppointmentRespository';
 
-import AppointmentRepository from '../repositories/AppointmentRepository';
-
-interface Appointment {
+interface IAppointment {
   providerId: string;
   date: Date;
 }
-
+@injectable()
 class CreateAppointmentService {
+  constructor(
+    @inject('AppointmentRepository')
+    private appointmentRepository: IAppointmentRepository
+  ) {}
+
   public async execute({
     date,
     providerId,
-  }: Appointment): Promise<Appointment> {
-    const appointmentRepository = getCustomRepository(AppointmentRepository);
+  }: IAppointment): Promise<Appointment> {
     const appointmentDate = startOfHour(date);
 
-    const isDateAlreadyBooked = await appointmentRepository.isDateAlreadyBooked(
+    const isDateAlreadyBooked = await this.appointmentRepository.findByDate(
       appointmentDate
     );
 
@@ -26,12 +31,10 @@ class CreateAppointmentService {
       throw new AppError('This date is no longer available');
     }
 
-    const appointment = appointmentRepository.create({
+    const appointment = await this.appointmentRepository.create({
       providerId,
       date: appointmentDate,
     });
-
-    await appointmentRepository.save(appointment);
 
     return appointment;
   }

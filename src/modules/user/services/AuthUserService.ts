@@ -1,9 +1,10 @@
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
-import { getRepository } from 'typeorm';
 import User from '@modules/user/infra/typeorm/entities/User';
 import authConfig from '@config/auth';
 import AppError from '@shared/errors/AppError';
+import { inject, injectable } from 'tsyringe';
+import IUserRepository from '../repositories/IUserRespository';
 
 interface IAuth {
   email: string;
@@ -15,15 +16,14 @@ interface IAuthResponse {
   token: string;
 }
 
+@injectable()
 class AuthUserService {
-  public async execute({ email, password }: IAuth): Promise<IAuthResponse> {
-    const userRepository = getRepository(User);
+  constructor(
+    @inject('UserRepository') private userRepository: IUserRepository
+  ) {}
 
-    const user = await userRepository.findOne({
-      where: {
-        email,
-      },
-    });
+  public async execute({ email, password }: IAuth): Promise<IAuthResponse> {
+    const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
       throw new AppError('Invalid credentials', 404);

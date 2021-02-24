@@ -1,24 +1,28 @@
-import { getRepository } from 'typeorm';
 import path from 'path';
 import fs from 'fs';
 import User from '@modules/user/infra/typeorm/entities/User';
 import uploadConfig from '@config/upload';
 
 import AppError from '@shared/errors/AppError';
+import { inject, injectable } from 'tsyringe';
+import IUserRepository from '../repositories/IUserRespository';
 
 interface IAvatarUpload {
   userId: string;
   pictureFilename: string;
 }
 
+@injectable()
 class UpdateUserAvatar {
+  constructor(
+    @inject('UserRepository') private userRepository: IUserRepository
+  ) {}
+
   public async execute({
     userId,
     pictureFilename,
   }: IAvatarUpload): Promise<User> {
-    const userRepository = getRepository(User);
-
-    const user = await userRepository.findOne(userId);
+    const user = await this.userRepository.findById(userId);
 
     if (!user) {
       throw new AppError('User does not exists');
@@ -35,7 +39,7 @@ class UpdateUserAvatar {
 
     user.picture = pictureFilename;
 
-    await userRepository.save(user);
+    await this.userRepository.save(user);
 
     return user;
   }

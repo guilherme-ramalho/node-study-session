@@ -6,6 +6,7 @@ import errorHandler from '@shared/infra/http/middlewares/errorHandler';
 import routes from './routes';
 
 import '@shared/infra/database/typeorm';
+import '@shared/container';
 
 const app = express();
 

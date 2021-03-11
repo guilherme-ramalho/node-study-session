@@ -11,7 +11,7 @@ class AppointmentsRepository implements IAppointmentRepository {
     this.repository = getRepository(Appointment);
   }
 
-  public async find(): Promise<Array<Appointment>> {
+  public async findAll(): Promise<Array<Appointment>> {
     const appointments = await this.repository.find();
 
     return appointments;

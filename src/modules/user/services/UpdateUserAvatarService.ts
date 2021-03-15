@@ -5,6 +5,7 @@ import uploadConfig from '@config/upload';
 
 import AppError from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
+import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
 import IUserRepository from '../repositories/IUserRespository';
 
 interface IAvatarUpload {
@@ -15,7 +16,11 @@ interface IAvatarUpload {
 @injectable()
 class UpdateUserAvatar {
   constructor(
-    @inject('UserRepository') private userRepository: IUserRepository
+    @inject('UserRepository')
+    private userRepository: IUserRepository,
+
+    @inject('StorageProvider')
+    private storageProvider: IStorageProvider
   ) {}
 
   public async execute({
@@ -29,15 +34,10 @@ class UpdateUserAvatar {
     }
 
     if (user.picture) {
-      const userPicturePath = path.join(uploadConfig.directory, user.picture);
-      const userPictureExists = await fs.promises.stat(userPicturePath);
-
-      if (userPictureExists) {
-        await fs.promises.unlink(userPicturePath);
-      }
+      await this.storageProvider.deleteFile(user.picture);
     }
 
-    user.picture = pictureFilename;
+    user.picture = await this.storageProvider.saveFile(pictureFilename);
 
     await this.userRepository.save(user);
 

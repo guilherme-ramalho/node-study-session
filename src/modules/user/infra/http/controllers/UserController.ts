@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import CreateUserService from '@modules/user/services/CreateUserService';
-import UpdateUserAvatar from '@modules/user/services/UpdateUserAvatar';
+import UpdateUserAvatar from '@modules/user/services/UpdateUserAvatarService';
 
 class UserController {
   async create(request: Request, response: Response): Promise<Response> {

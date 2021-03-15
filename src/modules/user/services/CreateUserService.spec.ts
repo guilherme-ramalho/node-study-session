@@ -3,11 +3,17 @@ import { v4 as uuid } from 'uuid';
 import AppError from '@shared/errors/AppError';
 import User from '../infra/typeorm/entities/User';
 import CreateUserService from './CreateUserService';
+import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 
 describe('CreateUserService', () => {
   it('should be able to create a new user', async () => {
     const fakeUserRepository = new FakeUserRepository();
-    const createUserService = new CreateUserService(fakeUserRepository);
+    const fakeHashProvider = new FakeHashProvider();
+
+    const createUserService = new CreateUserService(
+      fakeUserRepository,
+      fakeHashProvider
+    );
 
     const userData = new User();
     userData.id = uuid();
@@ -24,7 +30,12 @@ describe('CreateUserService', () => {
 describe('CreateUserService', () => {
   it('should not be able create with an already used email', async () => {
     const fakeUserRepository = new FakeUserRepository();
-    const createUserService = new CreateUserService(fakeUserRepository);
+    const fakeHashProvider = new FakeHashProvider();
+
+    const createUserService = new CreateUserService(
+      fakeUserRepository,
+      fakeHashProvider
+    );
 
     const userData = new User();
     userData.name = 'Guilherme Ramalho';
